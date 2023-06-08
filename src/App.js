@@ -1,32 +1,35 @@
 import React from 'react'
 import { Amplify } from 'aws-amplify'
-import logo from './logo.svg';
 import './App.css';
-import { withAuthenticator } from '@aws-amplify/ui-react'
+import { Authenticator } from '@aws-amplify/ui-react'
 import '@aws-amplify/ui-react/styles.css';
 import awsExports from "./aws-exports";
+import { Tabs, TabItem, View } from '@aws-amplify/ui-react';
+import Profile from './components/Profile';
 
 Amplify.configure(awsExports);
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Authenticator>
+      {({ signOut, user }) => (
+        <View>
+          <Tabs>
+            <TabItem title="Chat">
+              Chat
+              <p>{user.username}</p>
+            </TabItem>
+            <TabItem title="Search">
+              Search
+            </TabItem>
+            <TabItem title="Profile">
+              <Profile id={user.username} email={user.attributes.email}/>
+            </TabItem>
+          </Tabs>
+        </View>
+      )}
+    </Authenticator>
   );
 }
 
-export default withAuthenticator(App);
+export default App;
